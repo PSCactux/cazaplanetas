@@ -1,0 +1,23 @@
+{
+  "target": "Kepler-10",
+  "planet": "Kepler-10 b",
+  "quarters": 15,
+  "points": 51937,
+  "download_mb_on_disk": 5.9,
+  "download_seconds": 4.8,
+  "bls": {
+    "period": 0.8374911499796753,
+    "t0": 120.6871465105713,
+    "duration": 0.08,
+    "depth_ppm": 155.31731712716882,
+    "sde": 37.56080811864693,
+    "n_periods": 406827,
+    "seconds": 37.06512137500249
+  },
+  "published": {
+    "pl_orbper": 0.8374907,
+    "pl_trandur": 1.811,
+    "source": "NASA Exoplanet Archive pscomppars"
+  },
+  "period_relative_error": 5.372951309176402e-07
+}

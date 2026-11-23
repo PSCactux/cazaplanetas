@@ -1,0 +1,463 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plan de cazaplanetas</title>
+<meta name="description" content="Plan del proyecto cazaplanetas: datos, comparación, métricas, modelo pequeño e hitos hasta una primera versión publicable.">
+<style>
+:root {
+  color-scheme: light;
+  --bg: #fcfcfb;
+  --surface: #f3f2ee;
+  --border: #e2e1dc;
+  --text: #1a1a19;
+  --text-2: #52514e;
+  --accent: #2a78d6;
+  --accent-soft: #e6effa;
+  --low: #1a7f4e;   --low-bg: #e3f3ea;
+  --mid: #8a5a00;   --mid-bg: #fbf0d9;
+  --high: #b3261e;  --high-bg: #fbe5e3;
+  --done: #2a78d6;  --done-bg: #e6effa;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #161615; --surface: #201f1e; --border: #34332f;
+    --text: #f0efec; --text-2: #c3c2b7;
+    --accent: #6aa8f0; --accent-soft: #1d2a3b;
+    --low: #6fd3a0; --low-bg: #16301f;
+    --mid: #f0c060; --mid-bg: #33280f;
+    --high: #f08a80; --high-bg: #3a1a17;
+    --done: #6aa8f0; --done-bg: #1d2a3b;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #161615; --surface: #201f1e; --border: #34332f;
+  --text: #f0efec; --text-2: #c3c2b7;
+  --accent: #6aa8f0; --accent-soft: #1d2a3b;
+  --low: #6fd3a0; --low-bg: #16301f;
+  --mid: #f0c060; --mid-bg: #33280f;
+  --high: #f08a80; --high-bg: #3a1a17;
+  --done: #6aa8f0; --done-bg: #1d2a3b;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--bg); color: var(--text);
+  font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+main { max-width: 880px; margin: 0 auto; padding: 32px 16px 80px; }
+h1 { font-size: 2rem; line-height: 1.2; margin: 0 0 8px; letter-spacing: -0.01em; }
+h2 { font-size: 1.35rem; margin: 48px 0 12px; padding-top: 8px; border-top: 1px solid var(--border); }
+h3 { font-size: 1.08rem; margin: 24px 0 8px; }
+h4 { font-size: 0.98rem; margin: 22px 0 6px; }
+p, li { color: var(--text); }
+.lead { font-size: 1.1rem; color: var(--text-2); margin-top: 0; }
+.meta { color: var(--text-2); font-size: 0.9rem; }
+a { color: var(--accent); text-underline-offset: 2px; }
+code { font: 0.88em ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--surface); padding: 1px 5px; border-radius: 4px; }
+pre { background: var(--surface); padding: 12px 14px; border-radius: 8px; overflow-x: auto; font-size: 0.85rem; }
+pre code { background: none; padding: 0; }
+.table-wrap { overflow-x: auto; margin: 12px 0 20px; border: 1px solid var(--border); border-radius: 8px; }
+table { border-collapse: collapse; width: 100%; font-size: 0.92rem; }
+th, td { text-align: left; vertical-align: top; padding: 9px 12px; border-bottom: 1px solid var(--border); }
+th { background: var(--surface); font-weight: 600; color: var(--text-2); white-space: nowrap; }
+tr:last-child td { border-bottom: none; }
+td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.box { background: var(--accent-soft); border-radius: 10px; padding: 16px 18px; margin: 16px 0; }
+.box p:first-child { margin-top: 0; } .box p:last-child, .box ul:last-child { margin-bottom: 0; }
+.flow { display: flex; flex-wrap: wrap; gap: 8px; align-items: stretch; margin: 16px 0; }
+.flow div { flex: 1 1 140px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; font-size: 0.9rem; }
+.flow b { display: block; font-size: 0.95rem; margin-bottom: 2px; }
+.milestone { border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; margin: 16px 0; }
+.milestone h3 { margin-top: 0; display: flex; flex-wrap: wrap; gap: 8px; align-items: baseline; }
+.badge { font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 999px; white-space: nowrap; }
+.low { color: var(--low); background: var(--low-bg); }
+.mid { color: var(--mid); background: var(--mid-bg); }
+.high { color: var(--high); background: var(--high-bg); }
+.done { color: var(--done); background: var(--done-bg); }
+.check { border-left: 3px solid var(--accent); padding: 4px 0 4px 12px; margin: 10px 0 0; }
+.check b { color: var(--text-2); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.04em; display: block; }
+figure { margin: 16px 0; }
+figure img { width: 100%; height: auto; border-radius: 8px; border: 1px solid var(--border); background: #fcfcfb; }
+figcaption { color: var(--text-2); font-size: 0.88rem; margin-top: 6px; }
+nav.toc { background: var(--surface); border-radius: 10px; padding: 12px 18px; margin: 24px 0; }
+nav.toc ol { margin: 4px 0; padding-left: 20px; columns: 2; column-gap: 32px; }
+@media (max-width: 600px) { nav.toc ol { columns: 1; } h1 { font-size: 1.6rem; } }
+.refs li { margin-bottom: 6px; font-size: 0.92rem; }
+.small { font-size: 0.88rem; color: var(--text-2); }
+</style>
+</head>
+<body>
+<main>
+
+<h1>cazaplanetas: plan</h1>
+<p class="lead">Un modelo pequeño que busca planetas fuera del sistema solar en los datos públicos de los telescopios Kepler y TESS, y que demuestra con números que acierta como los modelos publicados gastando mucho menos.</p>
+<p class="meta">Estudio inicial · noviembre de 2026 · hitos 1 a 4 hechos (resultados del <a href="hito2.md">hito 2</a>, del <a href="hito3.md">hito 3</a> y del <a href="hito4.md">hito 4</a>) · hito 5 cerrado (<a href="hito5_diagnostico.md">diagnóstico</a>, <a href="hito5_receta.md">receta</a> y <a href="hito5_veredicto.md">veredicto</a>)</p>
+
+<nav class="toc" aria-label="Índice">
+<ol>
+  <li><a href="#resumen">Resumen</a></li>
+  <li><a href="#como-funciona">Cómo se encuentra un planeta</a></li>
+  <li><a href="#datos">Datos: cuáles, cómo y cuánto ocupan</a></li>
+  <li><a href="#etiquetas">Etiquetas: qué se sabe ya</a></li>
+  <li><a href="#comparacion">Con qué nos comparamos</a></li>
+  <li><a href="#metricas">Qué se mide</a></li>
+  <li><a href="#modelo">El modelo pequeño</a></li>
+  <li><a href="#tiempos">Cuánto ocupa y cuánto tarda</a></li>
+  <li><a href="#hitos">Hitos hasta la primera versión</a></li>
+  <li><a href="#candidatos">Si sale un candidato nuevo</a></li>
+  <li><a href="#riesgos">Riesgos</a></li>
+  <li><a href="#fuentes">Fuentes y licencias</a></li>
+</ol>
+</nav>
+
+<h2 id="resumen">1. Resumen</h2>
+<div class="box">
+<ul>
+  <li><b>Qué:</b> un clasificador que mira una señal periódica en el brillo de una estrella y dice si parece un planeta o un falso positivo (estrella doble, ruido, contaminación de una estrella vecina).</li>
+  <li><b>Con qué datos:</b> Kepler (2009–2013), que está muy bien etiquetado y es el banco de pruebas estándar, y después TESS (2018–hoy), donde quedan más cosas por encontrar. Todo es público y gratuito en el archivo MAST de la NASA.</li>
+  <li><b>Contra qué:</b> la búsqueda clásica (BLS/TLS), el clasificador por reglas de la propia misión (Robovetter) y los modelos de redes neuronales publicados: <b>Astronet</b> (Google, 2018) y <b>ExoMiner</b> (NASA, 2022; ExoMiner++ para TESS, 2025).</li>
+  <li><b>Qué queremos demostrar:</b> que un modelo de bolsillo (<b>50.000 parámetros como mucho</b>) <b>supera a ExoMiner</b> en Kepler DR25, comparando igual con igual, y que se entrena en minutos en un portátil, con todo reproducible desde cero. El objetivo inicial de «al menos 50 veces menos parámetros» se abandonó tras el hito 4 (la definición de «superar» está en el <a href="#hitos">hito 5</a>).</li>
+  <li><b>Primera versión publicable:</b> repositorio con resultados en Kepler comparados de tú a tú, una prueba de concepto en TESS y un solo comando que lo reproduce todo. Son 7 hitos; los cuatro primeros ya están hechos.</li>
+</ul>
+</div>
+
+<figure>
+  <img src="kepler-10b_fold.png" alt="Tres gráficas: la curva de luz de Kepler-10 limpia, el periodograma BLS con un pico en 0,837491 días, y la curva plegada en ese periodo con una caída de unas 155 partes por millón durante 1,9 horas.">
+  <figcaption>Lo que ya hace el esqueleto (hito 1): baja los 15 trimestres de Kepler-10 (5,9 MB), quita la tendencia lenta, busca con BLS entre 0,5 y 20 días y encuentra Kepler-10 b en 0,8374911 días. El valor publicado es 0,8374907 días: la diferencia es de 5 partes por diez millones. Las caídas sueltas más profundas de arriba son el otro planeta, Kepler-10 c (45 días), que queda fuera del rango buscado.</figcaption>
+</figure>
+
+<h2 id="como-funciona">2. Cómo se encuentra un planeta (en sencillo)</h2>
+<p>Cuando un planeta pasa por delante de su estrella, el brillo baja un poquito durante unas horas, y eso se repite cada órbita. Es el <b>tránsito</b>. Para un planeta como la Tierra la caída es de unas 80 partes por millón: como notar que una bombilla de 100 W pasa a 99,992 W.</p>
+<div class="flow" role="list">
+  <div role="listitem"><b>1. Curva de luz</b>El brillo de la estrella medido cada 30 min (Kepler) o 2 min (TESS) durante meses o años.</div>
+  <div role="listitem"><b>2. Limpieza</b>Se quita la variación lenta de la estrella y los saltos del instrumento.</div>
+  <div role="listitem"><b>3. Búsqueda</b>BLS o TLS prueban cientos de miles de periodos y dan las caídas repetidas más fuertes.</div>
+  <div role="listitem"><b>4. Criba</b>Aquí entra el modelo: ¿esto es un planeta o un impostor?</div>
+  <div role="listitem"><b>5. Seguimiento</b>Lo que pasa la criba se revisa a mano y con otros telescopios.</div>
+</div>
+<p>La búsqueda (paso 3) es un problema resuelto y barato. Lo difícil es la <b>criba</b> (paso 4): por cada planeta real salen muchas señales falsas. Ahí es donde las redes neuronales han aportado, y donde un modelo pequeño puede demostrar algo. Por eso el proyecto se centra en la criba, y usa la búsqueda clásica como primera etapa y como referencia.</p>
+
+<h2 id="datos">3. Datos: cuáles, cómo bajarlos y cuánto ocupan</h2>
+<div class="table-wrap"><table>
+<thead><tr><th>Fuente</th><th>Qué es</th><th>Cómo se baja</th><th>Tamaño</th><th>Uso</th></tr></thead>
+<tbody>
+<tr><td>Kepler, curvas de cadencia larga (PDCSAP)</td><td>~200.000 estrellas, 17 trimestres de ~90 días, una medida cada 29,4 min</td><td><code>lightkurve</code> estrella a estrella; para miles, la copia pública de MAST en AWS (<code>stpubdata</code>), que aguanta 30 descargas en paralelo (el servidor HTTP de MAST corta a partir de ~16)</td><td class="num">Medido: 5,9 MB por estrella (15 trimestres).<br>Las 17.230 estrellas con señal DR25: <b>118 GB, 275.127 ficheros, 2 h 04 min</b> (hito 3).<br>Todo Kepler: ~3 TB</td><td>Entrenamiento y banco de pruebas principal</td></tr>
+<tr><td>Vistas ya preparadas de Astronet</td><td>Curvas plegadas listas para entrenar, con la partición entrenamiento/validación/prueba del artículo</td><td>Enlace del repositorio de Astronet</td><td class="num">Medido: 145 MB (10 TFRecord)</td><td>Reproducir Astronet sin bajar 100 GB (hito 2)</td></tr>
+<tr><td>TESS, curvas SPOC de 2 min</td><td>Hasta ~20.000 estrellas por sector de 27 días; más de 90 sectores</td><td><code>lightkurve</code> o guiones masivos por sector de MAST</td><td class="num">~1–2 MB por curva; ~18 GB por sector con productos auxiliares</td><td>Prueba en TESS y búsqueda de candidatos (hito 6)</td></tr>
+<tr><td>TESS, imágenes completas (QLP, TESS-SPOC)</td><td>Millones de estrellas más débiles, cada 10 min o 200 s</td><td>MAST, productos de alto nivel (HLSP)</td><td class="num">Decenas de TB en total</td><td>Fuera de la v1; es donde más candidatos nuevos quedan</td></tr>
+<tr><td>K2</td><td>Segunda vida de Kepler, campañas de ~80 días, datos más ruidosos</td><td><code>lightkurve</code> (EVEREST, K2SFF)</td><td class="num">Menor que Kepler</td><td>Opcional, después de la v1</td></tr>
+<tr><td>NASA Exoplanet Archive</td><td>Tablas de señales candidatas (TCE), objetos de interés (KOI, TOI) y planetas confirmados</td><td>API TAP o <code>astroquery</code> (el guion ya la usa)</td><td class="num">Unos MB</td><td>Etiquetas y valores publicados</td></tr>
+</tbody></table></div>
+<p class="small">Disco libre en la máquina de trabajo: ~100 GB. Guardar todas las curvas de las estrellas candidatas de Kepler lo llenaría. En el hito 3 se hizo mejor de lo planeado: cada curva se lee <b>en memoria</b> y se descarta en cuanto están sus vistas, así que ningún FITS llega al disco. El conjunto final ocupa 652 MB. Todo se guarda dentro de <code>data/</code>, que no entra en git.</p>
+
+<h2 id="etiquetas">4. Etiquetas: qué se sabe ya</h2>
+<p>Para entrenar y medir hacen falta señales cuya respuesta ya conocemos.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Conjunto</th><th>Qué trae</th><th>Para qué</th></tr></thead>
+<tbody>
+<tr><td>Kepler DR24, señales candidatas (TCE)</td><td>20.367 señales; 15.737 con etiqueta: planeta candidato (3.600), falso positivo astrofísico (9.596) y no transitorio (2.541)</td><td>El banco de Astronet. Comparación directa con su artículo.</td></tr>
+<tr><td>Kepler DR25, TCE + Robovetter</td><td>34.032 señales y el veredicto del Robovetter. Incluye señales simuladas: tránsitos inyectados, curvas invertidas y barajadas</td><td>El banco de ExoMiner. Las simuladas sirven para medir cuántos planetas se escapan y cuántas falsas alarmas entran.</td></tr>
+<tr><td>Catálogo KOI acumulado</td><td>Confirmado / candidato / falso positivo, actualizado con seguimiento posterior</td><td>Etiquetas más fiables que las de DR24.</td></tr>
+<tr><td>Tabla de falsos positivos certificados de Kepler</td><td>Falsos positivos revisados a mano por el grupo de trabajo de Kepler</td><td>Negativos de alta calidad.</td></tr>
+<tr><td>Catálogo TOI de TESS (ExoFOP)</td><td>Disposición del grupo de seguimiento TFOPWG: confirmado (CP), ya conocido (KP), candidato (PC), candidato ambiguo (APC), falso positivo (FP), falsa alarma (FA)</td><td>Etiquetas para TESS. Son más ruidosas: muchos PC nunca se han revisado del todo.</td></tr>
+</tbody></table></div>
+<p><b>Ojo con las trampas:</b> la misma estrella no puede estar en entrenamiento y en prueba (se parte por estrella, no por señal), y no se deben usar como entrada columnas que ya contienen la respuesta (por ejemplo, las banderas del Robovetter).</p>
+
+<h2 id="comparacion">5. Con qué nos comparamos</h2>
+<div class="table-wrap"><table>
+<thead><tr><th>Método</th><th>Tipo</th><th>Qué publica</th><th>Código</th></tr></thead>
+<tbody>
+<tr><td>BLS (Kovács y otros, 2002)</td><td>Búsqueda clásica: ajusta una caja periódica</td><td>Referencia de detección; en <code>astropy</code></td><td>astropy, BSD-3</td></tr>
+<tr><td>TLS (Hippke y Heller, 2019)</td><td>Búsqueda clásica con la forma real del tránsito</td><td>Detecta planetas pequeños mejor que BLS</td><td>MIT</td></tr>
+<tr><td>Robovetter (Thompson y otros, 2018)</td><td>Reglas escritas a mano por el equipo de Kepler</td><td>Catálogo oficial DR25</td><td>Público, en el archivo</td></tr>
+<tr><td>Astronet (Shallue y Vanderburg, 2018)</td><td>Red convolucional sobre dos vistas plegadas</td><td>AUC 0,988 y exactitud 0,960 en su partición de prueba de DR24; descubrió Kepler-90 i y Kepler-80 g</td><td>Apache-2.0</td></tr>
+<tr><td>Exonet (Ansdell y otros, 2018)</td><td>Astronet + desplazamiento del centroide + datos de la estrella</td><td>Mejora a Astronet; ya probó una versión reducida (Exonet-XS)</td><td>Público</td></tr>
+<tr><td>GPC / RFC (Armstrong y otros, 2021)</td><td>Proceso gaussiano y bosque aleatorio sobre rasgos</td><td>Validó 50 planetas de Kepler</td><td>Público</td></tr>
+<tr><td>ExoMiner (Valizadegan y otros, 2022)</td><td>Red de varias ramas, una por cada prueba que haría un experto</td><td>Con precisión 0,99 recupera el 93,6 % de los planetas de prueba (el siguiente, GPC, el 76,3 %); validó 301 planetas nuevos</td><td>NOSA (licencia de la NASA)</td></tr>
+<tr><td>ExoMiner++ (Valizadegan y otros, 2025)</td><td>ExoMiner con entrenamiento conjunto Kepler + TESS</td><td>Sobre 147.568 señales de TESS 2 min marca 7.330 como candidatas, 50 de ellas CTOI nuevas</td><td>NOSA</td></tr>
+<tr><td>Astronet-Triage-v2 (Tey y otros, 2023)</td><td>Criba para imágenes completas de TESS</td><td>Área bajo la curva precisión–exhaustividad 0,965; recupera 3.577 de 4.140 TOI</td><td>Público + datos en Zenodo</td></tr>
+<tr><td>WATSON-Net (2025)</td><td>Red reciente para Kepler y TESS</td><td>Reproduce la comparación con ExoMiner (AUC 0,995)</td><td>Ver artículo</td></tr>
+</tbody></table></div>
+<p><b>Cómo se compara de forma justa:</b></p>
+<ul>
+  <li><b>Calidad:</b> usamos exactamente la misma partición y las mismas etiquetas que cada artículo (la partición de Astronet en DR24; la validación cruzada por estrella de ExoMiner en DR25) y damos sus números publicados al lado de los nuestros, con su intervalo de confianza. La partición de Astronet es por señal y deja estrellas repetidas entre entrenamiento y prueba, así que desde el hito 3 damos también, y como cifra principal, la partición por estrella.</li>
+  <li><b>Coste:</b> los números de coste de los artículos no son comparables (otras máquinas). Por eso reentrenamos Astronet nosotros, en la misma máquina y con los mismos datos, y medimos las dos cosas igual. ExoMiner se compara por número de parámetros y por sus resultados publicados; su código tiene licencia NOSA, así que no se copia, solo se lee y se ejecuta para contar.</li>
+</ul>
+
+<h2 id="metricas">6. Qué se mide</h2>
+<h3>Calidad (lo que usa la comunidad)</h3>
+<div class="table-wrap"><table>
+<thead><tr><th>Métrica</th><th>En palabras</th><th>Quién la usa</th></tr></thead>
+<tbody>
+<tr><td>AUC ROC</td><td>Probabilidad de que un planeta real reciba más nota que un falso positivo</td><td>Astronet, Exonet, WATSON-Net</td></tr>
+<tr><td>Área bajo precisión–exhaustividad (AUC-PR)</td><td>Como la anterior pero castiga más fallar con la clase rara (planetas)</td><td>ExoMiner, Astronet-Triage-v2</td></tr>
+<tr><td>Exhaustividad con precisión 0,99 (R@P0.99)</td><td>Qué parte de los planetas recuperas si exiges que el 99 % de lo que marcas sea planeta</td><td>ExoMiner (la métrica que más importa para validar)</td></tr>
+<tr><td>Precisión y exhaustividad con el umbral elegido en validación</td><td>De lo marcado, cuánto acierta; de lo real, cuánto encuentra. El umbral se elige con la validación (mejor F1), nunca con la prueba; con 0,5 se da como referencia (desde el hito 3)</td><td>Todos (casi siempre con 0,5)</td></tr>
+<tr><td>Completitud y fiabilidad con señales simuladas</td><td>Cuántos tránsitos inyectados recupera y cuántas curvas invertidas o barajadas se cuelan</td><td>Robovetter / DR25</td></tr>
+<tr><td>Recuperación de TOI conocidos</td><td>En TESS: qué parte de los planetas confirmados (CP, KP) marca como candidatos</td><td>ExoMiner++, Astronet-Triage-v2</td></tr>
+</tbody></table></div>
+<h3>Coste (lo que queremos ganar)</h3>
+<ul>
+  <li><b>Parámetros</b> del modelo y tamaño del fichero de pesos.</li>
+  <li><b>Operaciones por señal</b> (FLOPs) en la predicción.</li>
+  <li><b>Tiempo de entrenamiento</b> en un Mac con M3 Max, de principio a fin, y <b>tiempo por señal</b> al predecir.</li>
+  <li><b>Memoria máxima</b> y <b>disco</b> necesarios para reproducirlo.</li>
+  <li><b>Energía estimada</b> (tiempo × consumo típico del chip; sin herramientas que pidan permisos de administrador).</li>
+</ul>
+<div class="box"><p><b>Qué contará como éxito</b> (cambiado tras el hito 4): <b>superar a ExoMiner</b> en Kepler DR25. «Superar» es que nuestra media sea igual o mayor que la suya en las dos medidas (AUC-PR y R@P0.99), con menos parámetros y comparando igual con igual: un modelo con un modelo y un conjunto con un conjunto. Escalón intermedio: R@P0.99 de 0,909 o más. Tope de bolsillo: 50.000 parámetros por modelo. Nada se elige mirando las particiones de prueba, y se declara cuántas configuraciones se probaron. El criterio anterior (calidad dentro del intervalo de ExoMiner con ≥ 50 veces menos parámetros) se abandona: el hito 4 midió 6,6 veces menos. Si no se llega, se publica igual con la curva calidad–coste: también es un resultado.</p></div>
+
+<h2 id="modelo">7. El modelo pequeño</h2>
+<p><b>Idea:</b> lo que un astrónomo mira para cribar se puede resumir en unas pocas vistas de la curva plegada. Si se le dan bien preparadas, no hace falta una red grande. Astronet usa 9.940.193 parámetros (contados en el hito 2), el 85 % en su primera capa densa.</p>
+<h3>Entradas (por cada señal)</h3>
+<ul>
+  <li><b>Vista global:</b> la órbita entera plegada, en 2.001 tramos (como Astronet).</li>
+  <li><b>Vista local:</b> el tránsito ampliado, en 201 tramos.</li>
+  <li><b>Tránsitos pares e impares</b> por separado: si son distintos, suele ser una estrella doble.</li>
+  <li><b>Eclipse secundario:</b> la vista local en la fase 0,5; un planeta casi no se ve ahí, una estrella doble sí.</li>
+  <li><b>Desplazamiento del centroide:</b> si la luz que baja viene de una estrella vecina, el centro de luz se mueve.</li>
+  <li><b>Unos pocos números:</b> periodo, duración, profundidad, relación señal/ruido y radio y gravedad de la estrella.</li>
+</ul>
+<h3>Arquitectura propuesta: «Astronet de bolsillo»</h3>
+<ul>
+  <li>Una rama convolucional 1D por vista, con <b>convoluciones separables</b> (filtran cada canal por separado y luego mezclan: mucho más baratas) de 8 → 16 → 32 canales.</li>
+  <li><b>Promedio global</b> al final de cada rama en lugar de capas densas enormes: aquí está casi todo el ahorro.</li>
+  <li>Se juntan las ramas con los números escalares y una capa de 32 neuronas da la probabilidad de planeta.</li>
+  <li><b>Tamaño objetivo: 20.000–80.000 parámetros</b> (100–500 veces menos que Astronet; pesos de menos de 0,5 MB). Un conjunto de 5 sigue por debajo de 0,5 millones. Desde el hito 5, el tope es de <b>50.000 parámetros por modelo</b>.</li>
+  <li><b>Referencia aún más barata:</b> un modelo de árboles (gradient boosting) sobre rasgos calculados a mano. Si la red pequeña no le gana, la red sobra, y eso también se publicará.</li>
+</ul>
+<h3>Entrenamiento</h3>
+<ul>
+  <li>PyTorch con el backend <b>MPS</b> (la GPU de Apple). Es lo que cualquiera puede reproducir también en CUDA o CPU. <b>MLX</b> se probará como experimento aparte para medir velocidad, no como base. Con modelos tan pequeños puede que la CPU vaya igual de rápido; se medirán las dos.</li>
+  <li>Pérdida de entropía cruzada con pesos por clase, AdamW, parada temprana con la validación.</li>
+  <li>Aumentos de datos: invertir el tiempo (como Astronet), desplazar un poco la fase, añadir ruido.</li>
+  <li>Todo con semilla fija y versión de datos registrada (un manifiesto con sumas de comprobación).</li>
+</ul>
+
+<h2 id="tiempos">8. Cuánto ocupa y cuánto tarda en un Mac con M3 Max (36 GB)</h2>
+<div class="table-wrap"><table>
+<thead><tr><th>Paso</th><th>Estimación</th><th>De dónde sale</th></tr></thead>
+<tbody>
+<tr><td>Bajar y procesar una estrella de Kepler</td><td class="num">~25–50 s, 5,9 MB</td><td><b>Medido</b> con Kepler-10 vía <code>lightkurve</code> (15 ficheros, uno detrás de otro)</td></tr>
+<tr><td>Búsqueda BLS completa (0,5–20 d, 407.000 periodos)</td><td class="num">33 s por estrella</td><td><b>Medido</b>, un solo núcleo</td></tr>
+<tr><td>Bajar las 17.230 estrellas con señal DR25 y construir todas sus vistas</td><td class="num">2 h 04 min; 118 GB leídos, 652 MB guardados</td><td><b>Medido</b> en el hito 3: 10 procesos × 3 descargas desde la copia de MAST en AWS (16 MB/s de media, el límite fue la conexión). Las vistas se calculan a la vez que se baja; el spline elegido por BIC cuesta ~1–2 s por estrella</td></tr>
+<tr><td>Entrenar el modelo pequeño</td><td class="num">57 s (20 épocas, DR24)</td><td><b>Medido</b> en el hito 2 con 12.589 señales en MPS; con las ~30.000 de DR25 serán unos 2–3 min</td></tr>
+<tr><td>Validación cruzada (10 particiones × 10 semillas)</td><td class="num">1–3 h</td><td>Estimado a partir de lo anterior</td></tr>
+<tr><td>Reentrenar Astronet como referencia de coste</td><td class="num">197 s por modelo</td><td><b>Medido</b> en el hito 2: 9,9 M parámetros, 50 épocas, MPS</td></tr>
+<tr><td>Predecir con el modelo pequeño</td><td class="num">42 µs por señal (MPS); 1,6 ms (CPU, 1 hilo)</td><td><b>Medido</b> en el hito 2: 9 millones de multiplicaciones-sumas por señal</td></tr>
+<tr><td>Un sector de TESS (2 min): bajar + BLS + criba</td><td class="num">~18 GB; 3–6 h</td><td>Estimado: hasta 20.000 curvas; BLS es mucho más rápido con 27 días de datos</td></tr>
+</tbody></table></div>
+<p class="small">Conclusión: lo caro no es entrenar sino <b>bajar y preparar datos</b>. Por eso el plan empieza con datos ya preparados (hito 2) y deja la descarga masiva para cuando ya sabemos que el modelo funciona.</p>
+
+<h2 id="hitos">9. Hitos hasta la primera versión publicable</h2>
+
+<div class="milestone">
+<h3>Hito 1 · Esqueleto que baja una curva y encuentra un planeta conocido <span class="badge done">Hecho</span> <span class="badge low">Dificultad baja</span></h3>
+<p>Repositorio con git, entorno reproducible con <code>uv</code> (versiones fijadas en <code>uv.lock</code> y <code>requirements.txt</code>), datos fuera de git y un guion que baja Kepler-10, lo limpia, busca con BLS y dibuja el tránsito.</p>
+<p class="check"><b>Criterio comprobable</b><code>uv run pytest</code> pasa: el periodo recuperado de Kepler-10 b coincide con el publicado (0,8374907 d) con error relativo &lt; 10⁻⁴ (sale 5·10⁻⁷), y BLS recupera un tránsito sintético inyectado. La imagen está en <code>docs/</code>.</p>
+</div>
+
+<div class="milestone">
+<h3>Hito 2 · Reproducir Astronet y primer modelo pequeño con datos ya preparados <span class="badge done">Hecho</span> <span class="badge mid">Dificultad media</span></h3>
+<p>Con las vistas ya preparadas de Astronet (145 MB): reimplementar Astronet en PyTorch, entrenarlo en la misma máquina y medir su coste; entrenar el modelo pequeño (solo vistas global y local) con la misma partición.</p>
+<p class="check"><b>Criterio comprobable</b>Astronet reimplementado da AUC ≥ 0,983 en la partición de prueba (artículo: 0,988). El modelo pequeño da AUC ≥ 0,975 con ≤ 1/50 de los parámetros. Tabla con parámetros, tiempo de entrenamiento y tiempo por señal de los dos, media y desviación de 5 semillas, generada por un solo comando.</p>
+<p><b>Resultado</b> (<code>uv run python scripts/hito2_astronet.py</code>, unos 22 min; tabla completa y explicación en <a href="hito2.md">hito2.md</a>). Partición de prueba de Astronet: 1.574 señales, 360 planetas; media ± desviación de 5 semillas; precisión y recall con umbral 0,5.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Modelo</th><th>AUC</th><th>Precisión</th><th>Recall</th><th>Parámetros</th><th>Entrenamiento</th><th>Inferencia por curva</th></tr></thead>
+<tbody>
+<tr><td>Astronet reentrenado</td><td class="num">0,9883 ± 0,0007</td><td class="num">0,892 ± 0,018</td><td class="num">0,947 ± 0,034</td><td class="num">9.940.193</td><td class="num">197 ± 5 s</td><td class="num">70 µs (MPS) · 2,0 ms (CPU)</td></tr>
+<tr><td>Astronet de bolsillo</td><td class="num">0,9858 ± 0,0009</td><td class="num">0,895 ± 0,012</td><td class="num">0,902 ± 0,021</td><td class="num">36.161</td><td class="num">57 ± 3 s</td><td class="num">42 µs (MPS) · 1,6 ms (CPU)</td></tr>
+<tr><td>Astronet publicado (artículo, media de 10)</td><td class="num">0,988</td><td>—</td><td>—</td><td>—</td><td>90 min (CPU)</td><td>—</td></tr>
+</tbody></table></div>
+<p>Los dos criterios se cumplen: 0,9883 ≥ 0,983 y 0,9858 ≥ 0,975 con 275 veces menos parámetros. El modelo pequeño iguala la precisión pero recupera menos planetas con el umbral 0,5. Hallazgo para los hitos 3 y 4: la partición de Astronet es por señal, y el 56 % de las señales de prueba están en estrellas que también salen en entrenamiento; con solo las estrellas nuevas el AUC baja a ~0,968 en los dos modelos. (Corregido en el hito 3: ese subconjunto no es representativo. Con una partición por estrella de verdad, el AUC es 0,983.)</p>
+</div>
+
+<div class="milestone">
+<h3>Hito 3 · Nuestro propio conjunto de datos de Kepler DR25 <span class="badge done">Hecho</span> <span class="badge high">Dificultad media-alta</span></h3>
+<p>Descarga por tandas de las estrellas con señales DR25 y cálculo de todas las vistas (incluidas pares/impares, secundario y centroide) sin llenar el disco. El proceso se puede interrumpir y retomar. Añadido tras el hito 2: partición por estrella y umbral elegido en validación, para el modelo de bolsillo y para Astronet en las mismas condiciones.</p>
+<p class="check"><b>Criterio comprobable</b>Al menos el 98 % de las 34.032 señales DR25 procesadas, con la lista de fallos y su motivo. Para 100 señales al azar que también están en Astronet, la vista global nuestra, calculada con sus mismas efemérides y su receta, tiene con la suya una correlación mediana ≥ 0,95; y, entrenando con las mismas señales y la misma partición, nuestras vistas dan el mismo AUC que las suyas (dentro de 0,005). El conjunto final ocupa ≤ 2 GB y lleva un manifiesto con sumas de comprobación. <i>Ajustado en el hito 3: antes pedía correlación ≥ 0,95 con las efemérides de DR25. Eso no lo cumplen ni dos vistas correctas, porque la mayoría de las vistas globales son ruido, y un periodo que difiere en 6 partes por millón reparte ese ruido en otros tramos.</i></p>
+<p><b>Resultado</b> (<code>scripts/hito3_dr25.py</code> y <code>scripts/hito3_star_split.py</code>; detalles en <a href="hito3.md">hito3.md</a>):</p>
+<ul>
+  <li><b>34.032 de 34.032 señales (100 %)</b>, en 17.230 estrellas, y 0 fallos tras una segunda pasada. En la primera fallaron 24 señales sin tránsitos impares o pares con datos; ahora esas vistas se guardan vacías y quedan anotadas. 118 GB de curvas leídos en memoria en 2 h 04 min, sin escribir ningún FITS. El conjunto ocupa <b>652 MB</b>, con manifiesto SHA-256. El disco libre medido nunca bajó de 73 GB.</li>
+  <li>Correlación con las vistas globales de Astronet (100 señales, mismas efemérides y receta): <b>mediana 0,968</b>, media 0,961 (la vista local, 0,993). Entrenando con nuestras vistas o con las suyas (9.297 señales, misma partición por estrella): AUC 0,9748 frente a 0,9756 (Astronet) y 0,9717 frente a 0,9725 (bolsillo).</li>
+</ul>
+<p>Partición por estrella con las 15.737 señales de Astronet (80/10/10; prueba: 1.575 señales, 372 planetas; 5 semillas). Umbral elegido en validación (mejor F1):</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Modelo</th><th>AUC</th><th>AUC con la partición de Astronet (hito 2)</th><th>Planetas perdidos (umbral 0,5 → validación)</th><th>Falsas alarmas (0,5 → validación)</th><th>Parámetros</th></tr></thead>
+<tbody>
+<tr><td>Astronet reentrenado</td><td class="num">0,9829 ± 0,0007</td><td class="num">0,9883 ± 0,0007</td><td class="num">34,2 → 29,4</td><td class="num">37,4 → 41,6</td><td class="num">9.940.193</td></tr>
+<tr><td>Astronet de bolsillo</td><td class="num">0,9818 ± 0,0008</td><td class="num">0,9858 ± 0,0009</td><td class="num">41,4 → 28,6</td><td class="num">40,8 → 54,8</td><td class="num">36.161</td></tr>
+</tbody></table></div>
+<p>Al partir por estrella, el AUC baja unas 0,005 en los dos modelos. Son los mismos modelos y recetas: lo que desaparece es la ventaja de reconocer estrellas ya vistas, sobre todo binarias con dos señales. La distancia entre los dos modelos baja a 0,0011. Con el umbral de validación, el modelo pequeño pierde lo mismo que Astronet (28,6 frente a 29,4 planetas de 372), a cambio de 14 falsas alarmas más. Los tiempos de entrenamiento de este hito se midieron con otros trabajos en el mismo ordenador; para costes valen los del hito 2.</p>
+</div>
+
+<div class="milestone">
+<h3>Hito 4 · El modelo pequeño frente a ExoMiner <span class="badge done">Hecho</span> <span class="badge high">Dificultad alta</span></h3>
+<p>Modelo completo (todas las vistas + números) evaluado con el mismo protocolo de ExoMiner: validación cruzada por estrella en DR25 (<code>splits.star_folds</code>, ya hecho en el hito 3). Falta añadir al conjunto las etiquetas DR25 (KOI acumulado, falsos positivos certificados, Robovetter) y los escalares, con una lista explícita de columnas permitidas. Comparación con el modelo de árboles, con Astronet reentrenado y con las cifras publicadas de ExoMiner y Robovetter. Medición de completitud y fiabilidad con las señales simuladas.</p>
+<p class="check"><b>Criterio comprobable</b>Tabla con AUC-PR y R@P0.99 (media e intervalo del 95 % sobre 10 particiones × 10 semillas). Éxito si R@P0.99 queda dentro del intervalo publicado de ExoMiner (93,6 %) o por encima, con ≥ 50 veces menos parámetros y &lt; 10 min de entrenamiento. Si no, se publica la curva calidad–coste y la distancia exacta.</p>
+<p><b>Resultado</b> (<code>scripts/hito4_dr25_cv.py</code>; detalles en <a href="hito4.md">hito4.md</a>): <b>el criterio no se cumple</b>, y se publican la curva calidad–coste y las distancias. Etiquetas con las reglas de ExoMiner y las tablas de hoy: 31.045 señales con etiqueta (2.724 planetas, frente a sus 2.291: los confirmados desde 2020) y una lista de 32 columnas permitidas, con una prueba automática que falla si entra una columna que delata la respuesta (<code>tce_nkoi</code>, <code>av_*</code>, procedencia de los datos de la estrella...). Validación cruzada por estrella en 10 particiones; umbral elegido en validación.</p>
+<div class="table-wrap"><table><thead><tr><th>Modelo</th><th>AUC-PR</th><th>R@P0.99</th><th>Parámetros</th><th>Entrenamiento</th></tr></thead><tbody>
+<tr><td>Modelo de bolsillo completo (7 vistas + 32 columnas; 10 × 10)</td><td class="num">0,989 ± 0,003</td><td class="num">0,822 ± 0,059</td><td class="num">38.441</td><td class="num">6,1 min de media, 9,5 máx.</td></tr>
+<tr><td>El mismo, media de 10 semillas</td><td class="num">0,992 ± 0,003</td><td class="num">0,870 ± 0,058</td><td class="num">384.410</td><td>—</td></tr>
+<tr><td>Árboles con las 32 columnas (10 × 10)</td><td class="num">0,984 ± 0,005</td><td class="num">0,592 ± 0,187</td><td class="num">9.638 nodos</td><td class="num">10 s</td></tr>
+<tr><td>Astronet reentrenado (3 × 10)</td><td class="num">0,957 ± 0,008</td><td class="num">0,235 ± 0,112</td><td class="num">9.940.193</td><td class="num">13,6 min de media</td></tr>
+<tr><td>Robovetter (salida publicada)</td><td class="num">0,962 ± 0,008</td><td class="num">0,000</td><td>—</td><td>—</td></tr>
+<tr><td>ExoMiner (publicado; intervalo del 99 %)</td><td class="num">0,995 ± 0,002</td><td class="num">0,939 ± 0,030</td><td class="num">≈ 252.647 (contados a mano)</td><td>—</td></tr>
+</tbody></table></div>
+<p>Distancia con ExoMiner: 0,117 en R@P0.99 con un modelo (0,069 con la media de 10) y 0,006 en AUC-PR. Parámetros: 6,6 veces menos que ExoMiner, no 50 (259 frente a Astronet). Entrenamiento: menos de 10 minutos, sí. El modelo pequeño gana con claridad a Astronet, a los árboles y al Robovetter, pero no llega a ExoMiner ni con 10 copias, que ya suman más parámetros que él. Lo que más pesa es lo que recibe: con solo las vistas global y local, el mismo modelo se queda en 0,301. Antes de cambiar el modelo hay que separar cuánto aportan las vistas nuevas y cuánto las columnas. La medida con señales simuladas pasa al hito 6 (pide volver a leer las curvas).</p>
+</div>
+
+<div class="milestone">
+<h3>Hito 5 · Superar a ExoMiner en Kepler DR25 <span class="badge done">Hecho</span> <span class="badge high">Dificultad alta</span></h3>
+<p>El hito 4 dejó el modelo de bolsillo en 0,822 de R@P0.99 frente al 0,939 publicado de ExoMiner. Este hito cierra esa distancia sin salirse del bolsillo.</p>
+<div class="box">
+<p><b>Qué es «superar».</b> Nuestra media igual o mayor que la suya en las dos medidas (AUC-PR y R@P0.99), con menos parámetros y comparando igual con igual: un modelo con un modelo, y un conjunto con un conjunto.</p>
+<ul>
+  <li><b>Escalón intermedio:</b> R@P0.99 de 0,909 o más.</li>
+  <li><b>Tope de bolsillo:</b> 50.000 parámetros por modelo. El «50 veces menos» del plan original se abandona.</li>
+  <li><b>Sin trampas:</b> nada se elige mirando las particiones de prueba (toda elección, con la validación de cada partición) y cada paso declara cuántas configuraciones probó.</li>
+  <li><b>Las dos cuentas de R@P0.99, siempre:</b> la exacta (precisión ≥ 0,99) y la que reproduce las cifras de ExoMiner (precisión redondeada a dos decimales, es decir, ≥ 0,985). A ExoMiner se le mide con nuestro código y con las puntuaciones por señal que publica. Sus cifras son de un <b>conjunto de 10 modelos</b> por partición (unos 2,5 millones de parámetros).</li>
+</ul>
+</div>
+
+<h4>Paso 1 · Diagnóstico <span class="badge done">Hecho</span></h4>
+<p>Por qué nos quedamos en 0,822, sin descargar curvas: paridad de protocolo con el artículo y el código de ExoMiner, comparación directa con sus puntuaciones publicadas, análisis de errores, ablación de entradas e hipótesis ordenadas.</p>
+<p class="check"><b>Criterio comprobable</b>Documento con la tabla de paridad (cada dato con su cita), la cifra de ExoMiner medida con nuestras etiquetas, la lista de negativos que rompen la precisión 0,99 y de planetas perdidos por causa, cuántos hay que arreglar para llegar a 0,939, la tabla de ablación y las hipótesis ordenadas.</p>
+<p><b>Resultado</b> (<code>scripts/hito5_diagnostico.py</code>; detalles en <a href="hito5_diagnostico.md">hito5_diagnostico.md</a>). La distancia de 0,117 es sobre todo de cómo se compara:</p>
+<div class="table-wrap"><table><thead><tr><th>Media de las 10 particiones</th><th>R@P0.99 exacto</th><th>R@P0.99 como lo mide ExoMiner</th><th>AUC-PR</th></tr></thead><tbody>
+<tr><td>Bolsillo, un modelo (38.441 parámetros)</td><td class="num">0,822</td><td class="num">0,884</td><td class="num">0,989</td></tr>
+<tr><td>Bolsillo, media de 10 (384.410)</td><td class="num">0,870</td><td class="num">0,918</td><td class="num">0,992</td></tr>
+<tr><td>ExoMiner, media de 10 (≈ 2,5 millones), sus etiquetas y particiones</td><td class="num">0,920</td><td class="num">0,939</td><td class="num">0,995</td></tr>
+<tr><td>ExoMiner, media de 10, nuestras etiquetas y particiones</td><td class="num">0,932</td><td class="num">0,950</td><td class="num">0,995</td></tr>
+</tbody></table></div>
+<ul>
+  <li><b>Causa 1:</b> su cifra es de un conjunto de 10 modelos y la nuestra de uno (0,822 → 0,870).</li>
+  <li><b>Causa 2:</b> su «precisión 0,99» es en la práctica ≥ 0,985: con sus puntuaciones publicadas, la cuenta exacta le da 0,920, y el 0,939 ± 0,030 sale al milésimo redondeando la precisión a dos decimales (0,870 → 0,918 con la misma cuenta).</li>
+  <li><b>Causa 3:</b> de los 42 negativos que nos rompen la precisión, 15 son el eclipse secundario de una binaria detectado como señal aparte en la misma estrella. ExoMiner lo corrige en los datos antes de entrenar y les da 0,00.</li>
+  <li>Para llegar a 0,939 con la cuenta exacta hay que arreglar 17 objetos de 31.045 (10 para 0,909). La semilla mueve el resultado más que la partición. <b>No hace falta releer las curvas para el paso 2.</b></li>
+  <li><b>Medido sin entrenar</b> (regla del secundario + semilla elegida con la validación): un modelo de 38.441 parámetros, 0,894 exacto · 0,920 con su cuenta · 0,9917 de AUC-PR; el conjunto de 10, 0,902 · 0,947 · 0,9931, frente a 0,932 · 0,950 · 0,9954 de ExoMiner con nuestras etiquetas. Lo que queda es sobre todo AUC-PR, en unos 25 planetas mal puntuados (estrellas saturadas, sobre todo): de ahí el orden del paso 2.</li>
+  <li><b>Ablación</b> (10 grupos × 10 particiones × 3 semillas, 300 modelos): lo que más pesa es la prueba de centroide (−0,129 de R@P0.99 exacto, −0,0066 de AUC-PR), la vista global (−0,135) y los escalares del ajuste del tránsito (−0,058); impares/pares, vista local y otros diagnósticos DV no aportan nada medible al reentrenar, así que de ahí se pueden sacar parámetros para las entradas nuevas.</li>
+</ul>
+
+<h4>Paso 2 · Mejoras de receta sin datos nuevos <span class="badge done">Hecho</span></h4>
+<p>Con el conjunto del hito 3 y las tablas públicas, por este orden: (1) emparejar el secundario entre las señales de una misma estrella (escalares de la señal hermana y vista del secundario en su fase, reconstruida de la vista global guardada); (2) estabilizar el modelo único: elegir entre semillas con la validación, promediar pesos, destilar el conjunto de 10 en un modelo; (3) para el AUC-PR, la magnitud Kepler (estrellas saturadas) y una vista plegada a P/2 sacada de la vista global; (4) la coincidencia de efemérides con otras estrellas; (5) después, si falta: pérdida, aumentos y búsqueda de hiperparámetros con validación interna.</p>
+<p class="check"><b>Criterio comprobable</b>Tabla con las dos cuentas de R@P0.99 y AUC-PR (10 particiones × 10 semillas) para cada cambio, uno a uno y juntos, con el número de configuraciones probadas. Éxito del paso: el conjunto de 10 llega al escalón de 0,909 con la cuenta exacta, y un solo modelo de ≤ 50.000 parámetros iguala al conjunto de 10 de hoy (0,870).</p>
+<p><b>Resultado</b> (<code>scripts/hito5_receta.py</code>; detalles en <a href="hito5_receta.md">hito5_receta.md</a>). <b>El criterio se cumple.</b> Cada cambio con 10 particiones × 5 semillas (no 10: bastan 5 o más, y con otros trabajos en el mismo ordenador cada modelo tarda unos 100–400 s); la receta final y la del último peldaño, con 10 semillas. Todo elegido con la validación de cada partición; 22 recetas, 452 modelos.</p>
+<div class="table-wrap"><table><thead><tr><th>Media de las 10 particiones</th><th>Parámetros</th><th>R@P0.99 exacto</th><th>R@P0.99 como lo mide ExoMiner</th><th>AUC-PR</th></tr></thead><tbody>
+<tr><td>ExoMiner, media de 10, nuestras etiquetas y particiones</td><td class="num">≈ 2,5 millones</td><td class="num">0,932</td><td class="num">0,950</td><td class="num">0,9954</td></tr>
+<tr><td>Antes: un modelo (hito 4)</td><td class="num">38.441</td><td class="num">0,822</td><td class="num">0,884</td><td class="num">0,9894</td></tr>
+<tr><td>Antes: media de 10</td><td class="num">384.410</td><td class="num">0,870</td><td class="num">0,918</td><td class="num">0,9922</td></tr>
+<tr><td>Después: un modelo</td><td class="num">25.745</td><td class="num">0,920</td><td class="num">0,957</td><td class="num">0,9935</td></tr>
+<tr><td>Después: media de 10</td><td class="num">257.450</td><td class="num">0,956</td><td class="num">0,969</td><td class="num">0,9961</td></tr>
+</tbody></table></div>
+<ul>
+  <li><b>La señal hermana</b> (la otra señal de la misma estrella con el mismo periodo, como entrada) es casi todo: un modelo pasa de 0,807 a 0,913 de R@P0.99 exacto y de 0,9892 a 0,9927 de AUC-PR. La coincidencia de efemérides suma poco (+0,016 · +0,014 · +0,0006); la magnitud Kepler y la vista a P/2, nada medible.</li>
+  <li><b>Búsqueda</b> (17 cambios, un cambio cada vez, solo validación): pesos por clase, pérdida focal, desplazamiento de fase, media móvil de pesos, lote de 128 y la normalización de ExoMiner empeoran o no cambian nada; 8 cambios pequeños (ramas por prueba, sin vistas de impares/pares ni local, 30 épocas, ruido, suavizado de etiquetas…) juntos dejan el modelo en 25.745 parámetros y suben sobre todo el conjunto. La destilación del conjunto en un modelo da 0,935 · 0,954 · 0,9939, mejor en prueba, pero peor en validación que la combinación, así que no se elige.</li>
+  <li><b>Distancia a ExoMiner</b>, partición a partición: conjunto contra conjunto, +0,024 ± 0,020 exacto, +0,019 ± 0,019 con su cuenta y +0,0007 ± 0,0019 de AUC-PR (empate dentro del ruido). Un modelo contra su conjunto: −0,012 · +0,007 · −0,0019. Lo que falta en un modelo sigue en los planetas de estrellas saturadas y en los de periodo detectado al doble.</li>
+</ul>
+
+<h4>Paso 3 · Entradas que falten <span class="badge mid">No hecho</span></h4>
+<p><b>Se pasó al veredicto sin este paso</b> (decisión del 22/11): con la receta del paso 2 el conjunto ya iba por delante. Queda como el camino para que un modelo suelto pase también en AUC-PR (ver el paso 4). Primero las que no piden curvas: coincidencia de efemérides con otras estrellas calculada con la tabla de señales, magnitud Kepler, tránsitos impares y pares con datos, masa y densidad de la estrella. Cada columna nueva entra por la lista de permitidas y su prueba automática. <b>Releer las curvas</b> (118 GB, por tandas y sin guardarlas) solo si después de esto no se llega; la lista de lo que habría que sacar en una sola pasada está en el diagnóstico (centroide por componentes, dispersión por tramo, profundidad por tránsito, vistas con los demás tránsitos enmascarados, plegados a P/2 y 2P, datos de cabecera).</p>
+<p class="check"><b>Criterio comprobable</b>La misma tabla del paso 2 con cada entrada nueva, y la prueba de fugas ampliada en verde. Si se releen las curvas: 100 % de las señales procesadas otra vez, con manifiesto nuevo y sin tocar las vistas anteriores.</p>
+
+<h4>Paso 4 · Modelo final y veredicto <span class="badge done">Hecho</span></h4>
+<p>Una sola configuración, fijada antes de medir, entrenada con 10 particiones × 10 semillas. Veredicto con la definición de arriba, para un modelo y para el conjunto de 10, con las dos cuentas de R@P0.99 y con ExoMiner medido con el mismo código. Se repite con <b>otro reparto de particiones</b>, que no se ha mirado en ningún paso anterior.</p>
+<p class="check"><b>Criterio comprobable</b>«Supera» si la media de R@P0.99 y la de AUC-PR son iguales o mayores que las de ExoMiner (0,939 y 0,995 publicados; 0,920 con la cuenta exacta) con ≤ 50.000 parámetros por modelo: conjunto de 10 contra su conjunto de 10 y, aparte, un solo modelo contra su conjunto. Si no, se publican las distancias y la curva calidad–coste.</p>
+<p><b>Resultado</b> (<code>scripts/hito5_veredicto.py</code>; detalles en <a href="hito5_veredicto.md">hito5_veredicto.md</a>). Receta, reparto y regla cerrados en un commit antes de entrenar: la «combinación» del paso 2 (25.745 parámetros), un reparto de estrellas en 10 particiones que no se había usado nunca, 10 semillas, el conjunto de 10 y su destilado en un modelo. <b>El conjunto de 10 supera a ExoMiner; un modelo suelto y el destilado, no</b> (pasan en R@P0.99 y se quedan cortos en AUC-PR).</p>
+<div class="table-wrap"><table><thead><tr><th>Media de las 10 particiones nuevas</th><th>Parámetros</th><th>R@P0.99 exacto</th><th>R@P0.99 como lo mide ExoMiner</th><th>AUC-PR</th></tr></thead><tbody>
+<tr><td>ExoMiner, conjunto de 10, publicado (sus etiquetas y particiones)</td><td class="num">≈ 2,5 millones</td><td class="num">0,920</td><td class="num">0,939</td><td class="num">0,995</td></tr>
+<tr><td>ExoMiner, sus puntuaciones en nuestras particiones nuevas</td><td class="num">≈ 2,5 millones</td><td class="num">0,926</td><td class="num">0,950</td><td class="num">0,9952</td></tr>
+<tr><td>Un modelo (media de 10 semillas)</td><td class="num">25.745</td><td class="num">0,927</td><td class="num">0,953</td><td class="num">0,9934</td></tr>
+<tr><td>Destilado del conjunto en un modelo (media de 10 semillas)</td><td class="num">25.745</td><td class="num">0,936</td><td class="num">0,958</td><td class="num">0,9938</td></tr>
+<tr><td>Conjunto de 10</td><td class="num">257.450</td><td class="num">0,950</td><td class="num">0,963</td><td class="num">0,9962</td></tr>
+</tbody></table></div>
+<ul>
+  <li><b>Conjunto contra conjunto: supera</b> en las tres medias, contra lo publicado (+0,030 · +0,024 · +0,0012) y contra sus puntuaciones en las mismas particiones (+0,023 ± 0,029 · +0,013 ± 0,039 · +0,0010 ± 0,0018; por delante en 7, 8 y 7 de las 10), con unas 10 veces menos parámetros. La ventaja en AUC-PR sigue dentro del ruido.</li>
+  <li><b>Un modelo contra su conjunto: no supera.</b> En R@P0.99 iguala (+0,007 y +0,014 frente a lo publicado; +0,001 y +0,003 en la directa), pero el AUC-PR se queda en 0,9934: −0,0016 frente al 0,995 publicado y −0,0018 ± 0,0017 en la directa (por delante en 2 de 10). El destilado del conjunto mejora algo (0,936 · 0,958 · 0,9938) pero tampoco llega en AUC-PR (−0,0012 frente al publicado, −0,0013 ± 0,0017 en la directa).</li>
+  <li>Con el reparto nuevo las cifras casi no se mueven respecto al paso 2 (un modelo 0,920 · 0,957 · 0,9935; conjunto 0,956 · 0,969 · 0,9961): la ventaja del conjunto no dependía de cómo se agruparon las estrellas al elegir la receta.</li>
+</ul>
+
+<h4>Paso 5 · Revisión independiente <span class="badge done">Hecho</span></h4>
+<p>Alguien que no ha hecho el trabajo repite el veredicto desde un clon limpio y busca fugas: columnas que delatan la respuesta, estrellas repetidas entre particiones, elecciones hechas mirando la prueba y diferencias con el protocolo de ExoMiner.</p>
+<p class="check"><b>Criterio comprobable</b>Informe de la revisión con lo que se ha vuelto a ejecutar, las cifras que salen y la lista de pegas, cerradas o aceptadas una a una.</p>
+<p class="small">Se hizo antes de publicar el repositorio y sus correcciones, de redacción, están incorporadas a los textos; el informe de la revisión no se publica.</p>
+</div>
+
+<div class="milestone">
+<h3>Hito 6 · Señales simuladas de DR25 y de principio a fin en TESS <span class="badge high">Dificultad alta</span></h3>
+<p>Primero, lo que quedó pendiente del hito 4: completitud y fiabilidad con las señales simuladas de DR25 (tránsitos inyectados, curvas invertidas y barajadas), que piden volver a leer las curvas de Kepler para construir sus vistas. Después, limpieza + búsqueda (BLS y TLS) + criba con el modelo pequeño sobre 2–3 sectores de TESS de 2 min, ajustando el modelo con las etiquetas TOI. Prueba de inyección: meter tránsitos falsos en curvas reales y ver cuántos encuentra todo el sistema.</p>
+<p class="check"><b>Criterio comprobable</b>En esos sectores, el sistema marca como candidatos al menos el 90 % de los TOI confirmados o ya conocidos (CP/KP) con señal/ruido &gt; 10, y en las inyecciones recupera ≥ 80 % de los tránsitos con señal/ruido &gt; 10. Comparación del acuerdo con ExoMiner++ en las mismas señales. Lista aparte de señales marcadas que no son TOI ni CTOI, sin llamarlas descubrimientos.</p>
+</div>
+
+<div class="milestone">
+<h3>Hito 7 · Versión 0.1 publicable <span class="badge mid">Dificultad media</span></h3>
+<p>README con la tabla de resultados y la gráfica calidad–coste, ficha del modelo (para qué sirve y para qué no), pesos publicados (&lt; 1 MB), citas y licencias, pruebas automáticas que no necesitan internet y una página corta que lo explique para no especialistas.</p>
+<p class="check"><b>Criterio comprobable</b>Desde un clon limpio en una carpeta nueva: <code>uv sync</code> y un solo comando reproducen la tabla del hito 5 dentro de ±0,005 en AUC-PR usando el conjunto preparado. Las pruebas sin red pasan. <code>git log</code> y los ficheros no contienen rutas locales, correos ni claves. Subirlo a GitHub queda a decisión del autor del proyecto.</p>
+</div>
+
+<h2 id="candidatos">10. Si sale un candidato nuevo de verdad</h2>
+<p>No se promete. Kepler está muy exprimido: lo nuevo, si aparece, saldrá casi seguro de TESS. Para que una señal llegue a proponerse como <b>CTOI</b> (candidato de la comunidad) en ExoFOP haría falta, como mínimo:</p>
+<ol>
+  <li><b>Que no esté ya</b> en las listas de TOI, CTOI ni en el Exoplanet Archive.</li>
+  <li><b>Que se repita</b>: al menos dos o tres tránsitos, mejor en varios sectores, con forma y profundidad coherentes.</li>
+  <li><b>Pasar las pruebas de impostor</b> a mano: pares e impares iguales, sin eclipse secundario, centroide que no se mueve, ninguna estrella vecina brillante en el mismo píxel de TESS (los píxeles son de 21″; se comprueba con Gaia).</li>
+  <li><b>Tamaño creíble</b>: con el radio de la estrella, el radio del planeta debe ser de planeta, no de estrella.</li>
+  <li><b>Probabilidad de falso positivo</b> calculada con una herramienta estándar (por ejemplo TRICERATOPS) y revisión de los informes de validación de la misión si existen.</li>
+  <li><b>Revisión por alguien con experiencia</b>: lo ideal es contactar con un astrónomo o con el grupo de seguimiento (TFOP) antes de enviar.</li>
+  <li><b>Cuenta en ExoFOP</b> (gratuita, pero personal: la tiene que crear el autor del proyecto a su nombre) y envío del CTOI con periodo, época, duración, profundidad y notas. Luego la comunidad decide si merece seguimiento con otros telescopios.</li>
+</ol>
+
+<h2 id="riesgos">11. Riesgos</h2>
+<div class="table-wrap"><table>
+<thead><tr><th>Riesgo</th><th>Qué puede pasar</th><th>Qué hacemos</th></tr></thead>
+<tbody>
+<tr><td>Disco</td><td>110 GB libres; los datos de Kepler los llenarían</td><td>Descarga por tandas, guardar solo vistas compactas, borrar FITS; o disco externo</td></tr>
+<tr><td>Comparación injusta</td><td>Particiones o etiquetas distintas hacen que los números no se puedan comparar</td><td>Usar la partición de cada artículo; reentrenar Astronet aquí; poner siempre la fuente de cada cifra</td></tr>
+<tr><td>Fugas de información</td><td>Misma estrella en entrenamiento y prueba, o columnas que ya dicen la respuesta</td><td>Partir por estrella (hecho en el hito 3, con prueba automática); lista explícita de entradas permitidas, con prueba automática (hecho en el hito 4)</td></tr>
+<tr><td>Etiquetas ruidosas</td><td>Sobre todo en TESS: muchos «candidatos» no se han revisado</td><td>Medir en TESS solo con CP/KP/FP firmes; entrenar con Kepler + TESS</td></tr>
+<tr><td>«Menos coste» engañoso</td><td>Ganar en parámetros pero perder en preparación de datos</td><td>Medir el coste de todo el proceso, no solo del modelo</td></tr>
+<tr><td>Descargas lentas o cortadas en MAST</td><td>Errores, límites, días de descarga</td><td>Reintentos, reanudación, caché local; empezar con datos ya preparados</td></tr>
+<tr><td>Problemas con MPS</td><td>Operaciones no soportadas o resultados distintos a CPU</td><td>Probar también en CPU; prueba que compara las dos</td></tr>
+<tr><td>Prometer de más</td><td>Llamar «descubrimiento» a un falso positivo</td><td>Lenguaje prudente; pasos de la sección 10 antes de nada</td></tr>
+<tr><td>Licencias</td><td>Copiar código NOSA (ExoMiner) en un repo MIT</td><td>No copiar; reimplementar desde el artículo y citar</td></tr>
+</tbody></table></div>
+
+<h2 id="fuentes">12. Fuentes y licencias</h2>
+<h3>Datos</h3>
+<ul class="refs">
+  <li><a href="https://archive.stsci.edu/">MAST</a> (Mikulski Archive for Space Telescopes, STScI): curvas de Kepler, K2 y TESS. Datos públicos de la NASA, de uso libre; MAST pide un agradecimiento en las publicaciones. Descarga masiva: <a href="https://archive.stsci.edu/kepler/download_options.html">Kepler</a>, <a href="https://archive.stsci.edu/tess/bulk_downloads.html">TESS</a>.</li>
+  <li><a href="https://exoplanetarchive.ipac.caltech.edu/">NASA Exoplanet Archive</a> (Caltech/IPAC): tablas TCE, KOI, TOI y planetas. Uso libre con agradecimiento. Tamaños de descarga en <a href="https://exoplanetarchive.ipac.caltech.edu/bulk_data_download">bulk data download</a>.</li>
+  <li><a href="https://exofop.ipac.caltech.edu/tess/">ExoFOP-TESS</a>: catálogo TOI, CTOI y disposiciones TFOPWG. Uso libre con agradecimiento; enviar CTOI requiere cuenta.</li>
+  <li><a href="https://zenodo.org/record/7411579">Datos de Astronet-Triage-v2 en Zenodo</a> (licencia indicada en la ficha de Zenodo).</li>
+</ul>
+<h3>Software</h3>
+<ul class="refs">
+  <li><a href="https://github.com/lightkurve/lightkurve">lightkurve</a> (MIT) · <a href="https://www.astropy.org/">astropy</a> (BSD-3) · <a href="https://github.com/astropy/astroquery">astroquery</a> (BSD-3)</li>
+  <li><a href="https://github.com/hippke/tls">Transit Least Squares</a> (MIT) · <a href="https://github.com/hippke/wotan">wotan</a>, limpieza de curvas (MIT)</li>
+  <li><a href="https://github.com/google-research/exoplanet-ml">Astronet / exoplanet-ml</a> (Apache-2.0) · <a href="https://github.com/mdanatg/Astronet-Triage">Astronet-Triage</a></li>
+  <li><a href="https://github.com/nasa/ExoMiner">ExoMiner</a> (NASA Open Source Agreement, NOSA)</li>
+</ul>
+<h3>Artículos</h3>
+<ul class="refs">
+  <li>Kovács, Zucker y Mazeh (2002). BLS. <a href="https://arxiv.org/abs/astro-ph/0206099">arXiv:astro-ph/0206099</a></li>
+  <li>Shallue y Vanderburg (2018). Astronet, Kepler-90 i. AJ 155, 94. <a href="https://arxiv.org/abs/1712.05044">arXiv:1712.05044</a></li>
+  <li>Ansdell y otros (2018). Exonet. ApJL 869, L7. <a href="https://arxiv.org/abs/1810.13434">arXiv:1810.13434</a></li>
+  <li>Thompson y otros (2018). Catálogo DR25 y Robovetter. ApJS 235, 38. <a href="https://arxiv.org/abs/1710.06758">arXiv:1710.06758</a></li>
+  <li>Hippke y Heller (2019). Transit Least Squares. A&amp;A 623, A39. <a href="https://arxiv.org/abs/1901.02015">arXiv:1901.02015</a></li>
+  <li>Yu y otros (2019). Astronet-Triage y -Vetting para TESS. AJ 158, 25. <a href="https://arxiv.org/abs/1904.02726">arXiv:1904.02726</a></li>
+  <li>Armstrong, Gamper y Damoulas (2021). 50 planetas validados con aprendizaje automático. MNRAS 504, 5327. <a href="https://arxiv.org/abs/2008.10516">arXiv:2008.10516</a></li>
+  <li>Guerrero y otros (2021). Catálogo TOI de la misión principal de TESS. ApJS 254, 39. <a href="https://arxiv.org/abs/2103.12538">arXiv:2103.12538</a></li>
+  <li>Valizadegan y otros (2022). ExoMiner, 301 planetas validados. ApJ 926, 120. <a href="https://arxiv.org/abs/2111.10009">arXiv:2111.10009</a></li>
+  <li>Tey y otros (2023). Astronet-Triage-v2. AJ 165, 95. <a href="https://arxiv.org/abs/2301.01371">arXiv:2301.01371</a></li>
+  <li>Valizadegan y otros (2025). ExoMiner++ en TESS. AJ, <a href="https://doi.org/10.3847/1538-3881/ae03a4">doi:10.3847/1538-3881/ae03a4</a> · <a href="https://arxiv.org/abs/2502.09790">arXiv:2502.09790</a></li>
+  <li>WATSON-Net (2025). <a href="https://arxiv.org/abs/2511.08768">arXiv:2511.08768</a></li>
+  <li>Kepler-10 b: periodo de la tabla <code>pscomppars</code> del NASA Exoplanet Archive (Dumusque y otros, 2014).</li>
+</ul>
+<p class="small">Las cifras de los artículos se han tomado de sus resúmenes y de trabajos que las reproducen; antes de publicar la v1 se comprobarán contra las tablas originales.</p>
+
+</main>
+</body>
+</html>

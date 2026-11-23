@@ -1,0 +1,43 @@
+# Data: downloads, caches and derived datasets never go in git
+/data
+data/
+*.fits
+*.fits.gz
+*.h5
+*.hdf5
+*.npz
+*.npy
+*.parquet
+*.tfrecord*
+mastDownload/
+
+# Model checkpoints and experiment outputs
+checkpoints/
+runs/
+*.pt
+*.safetensors
+# ...except the small published files of release/ (see release/README.md)
+!release/*.npz
+!release/weights/*.npz
+
+# Python environments and tooling
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.ipynb_checkpoints/
+*.egg-info/
+build/
+dist/
+
+# Local settings and secrets
+.env
+.env.*
+.claude/
+.worktrees/
+.DS_Store
+.vscode/
+.idea/

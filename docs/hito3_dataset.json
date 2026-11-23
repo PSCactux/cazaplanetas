@@ -1,0 +1,102 @@
+{
+ "generated": "2026-11-20",
+ "tces_total": 34032,
+ "stars_total": 17230,
+ "tces_processed": 34032,
+ "fraction_processed": 1.0,
+ "tces_failed": 0,
+ "failures_by_reason": {},
+ "shards": 35,
+ "shards_expected": 35,
+ "dataset_bytes": 651684778,
+ "views_bytes": 611176692,
+ "manifest_sha256": "20db1f8bb54e4aaf77638bd9f034fa5d6c0e1438ee6799f2f7585cccb4209bea",
+ "tces_with_warnings": 209,
+ "empty_bins": {
+  "global_view": {
+   "tces_with_some": 3548,
+   "tces_with_all": 0
+  },
+  "local_view": {
+   "tces_with_some": 360,
+   "tces_with_all": 0
+  },
+  "odd_view": {
+   "tces_with_some": 2416,
+   "tces_with_all": 17
+  },
+  "even_view": {
+   "tces_with_some": 1301,
+   "tces_with_all": 7
+  },
+  "secondary_view": {
+   "tces_with_some": 346,
+   "tces_with_all": 0
+  },
+  "centroid_global_view": {
+   "tces_with_some": 3554,
+   "tces_with_all": 0
+  },
+  "centroid_local_view": {
+   "tces_with_some": 361,
+   "tces_with_all": 0
+  }
+ },
+ "diagnostics": {
+  "median_points_per_star": 64794.0,
+  "median_transits_per_tce": 43.0,
+  "tces_with_empty_global_bins": 3548
+ },
+ "build_runs": [
+  {
+   "date": "2026-11-20 12:17",
+   "batches": 35,
+   "done_before": 0,
+   "min_free_gb": 78.43170304,
+   "seconds": 7456.2550343750045
+  },
+  {
+   "date": "2026-11-20 12:18",
+   "batches": 35,
+   "done_before": 35,
+   "min_free_gb": 78.435762176,
+   "seconds": 0.009127041994361207
+  }
+ ],
+ "check_astronet": {
+  "seed": 0,
+  "n_astronet": 15737,
+  "n_matched": 9297,
+  "summary": {
+   "corr_dataset": {
+    "n": 100,
+    "median": 0.4493538588285446,
+    "mean": 0.5193735866062343,
+    "frac_ge_095": 0.21,
+    "p10": 0.0619590412825346
+   },
+   "corr_dr24_ephemeris": {
+    "n": 100,
+    "median": 0.9604224299133381,
+    "mean": 0.9138451362656447,
+    "frac_ge_095": 0.6,
+    "p10": 0.7659573911681332
+   },
+   "corr_astronet_recipe": {
+    "n": 100,
+    "median": 0.9680125002513961,
+    "mean": 0.9609309373355582,
+    "frac_ge_095": 0.76,
+    "p10": 0.9293700449296388
+   },
+   "corr_local_astronet_recipe": {
+    "n": 100,
+    "median": 0.992688589668568,
+    "mean": 0.9829593062124422,
+    "frac_ge_095": 0.95,
+    "p10": 0.9696844673405803
+   }
+  }
+ },
+ "data_dir_bytes": 1631008553
+}

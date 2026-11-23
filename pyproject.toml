@@ -1,0 +1,30 @@
+[project]
+name = "cazaplanetas"
+version = "0.1.0"
+description = "Small, cheap models that look for exoplanet transits in public Kepler light curves"
+requires-python = ">=3.12"
+license = "MIT"
+readme = "README.md"
+dependencies = [
+    "astropy>=8.0.3",
+    "lightkurve>=2.6.0",
+    "matplotlib>=3.11.2",
+    "numpy>=2.5.5",
+    "scikit-learn>=1.9.1",
+    "scipy>=1.18.1",
+    "torch>=2.15.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.2.0",
+]
+
+[build-system]
+requires = ["uv_build>=0.10,<0.11"]
+build-backend = "uv_build"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["network: downloads public data from MAST (needs internet)"]
+filterwarnings = ["ignore:.*oktopus.*:UserWarning"]

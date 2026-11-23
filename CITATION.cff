@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+message: "If you use this software or its models, please cite it as below."
+title: "cazaplanetas: small neural networks that vet Kepler transit signals"
+type: software
+authors:
+  - name: "PSCactux"
+version: 0.1.0
+license: MIT
+repository-code: "https://github.com/PSCactux/cazaplanetas"
+abstract: >-
+  Small, cheap neural networks that vet exoplanet transit signals in public
+  NASA Kepler data, measured head to head against Astronet and ExoMiner on
+  Kepler DR25 with ExoMiner's protocol. An ensemble of ten 25,745-parameter
+  models meets a pre-registered rule for beating ExoMiner's ensemble of ten
+  with about ten times fewer parameters; a single model does not.
+keywords:
+  - exoplanets
+  - Kepler
+  - transit vetting
+  - deep learning
+  - small models
